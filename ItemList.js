@@ -83,8 +83,14 @@ export default class ItemList extends Component {
     });
 
     this.valueScale = 1; //check scale item o stack sau
-    if (this.props.index == 0) {
+    if (
+      this.props.index == this.props.dataLength - 1 ||
+      (this.props.index == 0 && this.props.dataLength == 1)
+    ) {
       this.valueScale = 1;
+    } else if (this.props.index == 0) {
+      let index = (this.props.dataLength - 1) / 10;
+      this.valueScale = 1 - index;
     } else {
       this.valueScale = 1 - this.props.index / 10;
     }
@@ -98,19 +104,26 @@ export default class ItemList extends Component {
   componentDidMount() {
     Animated.spring(this.scaleParent, {
       toValue: this.valueScale,
-      friction: 8,
+      friction: 7,
     }).start();
   }
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.item.choose == true) {
+      if(nextProps.index == nextProps.dataLength) this.valueScale = 1
       Animated.spring(this.scaleParent, {
         toValue: 1,
         friction: 8,
       }).start();
     } else {
+      if(nextProps.index == 0){
+        let index = (nextProps.dataLength-1)/10
+        this.valueScale = 1-index
+      }else {
+        this.valueScale = 1 - (nextProps.index/10)
+      }
       Animated.spring(this.scaleParent, {
-        toValue: 1 - nextProps.index / 10,
+        toValue: this.valueScale,
         friction: 8,
       }).start();
     }
@@ -182,12 +195,13 @@ export default class ItemList extends Component {
 
     const translateY = index * 13;
 
-    const imageBackground = 'https://sohanews.sohacdn.com/2018/11/16/photo-5-15423775910181643963083.jpg';
+    const imageBackground =
+      'https://sohanews.sohacdn.com/2018/11/16/photo-5-15423775910181643963083.jpg';
+ 
+    const isPan = item.choose && dataLength > 1;
     return (
       <Animated.View
-        {...(item.choose && dataLength > 1
-          ? {...this.panResponder.panHandlers}
-          : null)}
+        {...(isPan ? {...this.panResponder.panHandlers} : null)}
         style={[
           styles.parent,
           {
@@ -197,7 +211,7 @@ export default class ItemList extends Component {
               {scale: this.scaleParent},
               {rotate: rolLeft},
             ],
-            zIndex: -index,
+            // zIndex: -index,
           },
         ]}>
         <TouchableOpacity
@@ -235,6 +249,7 @@ export default class ItemList extends Component {
               ]}
               pointerEvents={'box-none'}>
               <Image source={{uri: item.image}} style={[styles.image]} />
+              {/* <View style={[styles.image, {backgroundColor: item.image}]} /> */}
             </Animated.View>
           </View>
         </TouchableOpacity>
@@ -249,7 +264,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backfaceVisibility: 'hidden',
     flex: 1,
-    backgroundColor: 'yellow',
   },
   image: {
     width: 200,
@@ -257,8 +271,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   parent: {
-    left: 0,
-    right: 0,
     position: 'absolute',
   },
 });

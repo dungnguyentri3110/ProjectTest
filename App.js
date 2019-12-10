@@ -6,28 +6,26 @@ import {
   View,
   Text,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import ItemList from './ItemList';
-import moment from 'moment'
+import moment from 'moment';
 
 const dataFake = [
   {
-    image:
-      'http://images5.fanpop.com/image/photos/30100000/ssj4-Goku-goku-30185168-505-389.jpg',
+    image: 'http://pm1.narvii.com/6427/04f373c19e32073ba7e8af5fbbce202b7541defa_00.jpg',
     id: 1,
-    choose: true
+    choose: true,
   },
   {
-    image:
-      'http://images5.fanpop.com/image/photos/30100000/ssj4-Goku-goku-30185168-505-389.jpg',
+    image: 'https://image.winudf.com/v2/image/Y29tLmFuZHJvbW8uZGV2NjYwNjE0LmFwcDczNTM1MF9zY3JlZW5fMV8xNTE3NDQ3OTUzXzA1NA/screen-1.jpg?fakeurl=1&type=.jpg',
     id: 2,
-    choose: false
+    choose: false,
   },
   {
-    image:
-      'http://images5.fanpop.com/image/photos/30100000/ssj4-Goku-goku-30185168-505-389.jpg',
+    image: 'https://i.ebayimg.com/images/g/wnkAAOSwsYpaPzzq/s-l400.jpg',
     id: 3,
-    choose: false
+    choose: false,
   },
 ];
 
@@ -35,8 +33,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataList: dataFake
+      dataList: dataFake.reverse(),
     };
+    this.countAdd = 0
   }
 
   onSlideComplete = index => {
@@ -45,33 +44,36 @@ class App extends React.Component {
     for (let i = 0; i <= data.length; i++) {
       if (!data[i]) continue;
 
-      let itemNext = {...data[i + 1]};
+      let itemNext = {};
 
       if (data[i].id == index) {
+        data.splice(i, 1);
+        itemNext = {...data[i - 1]};
         itemNext.choose = true;
-        data.splice(i, 1);
+        data.splice(i - 1, 1);
+        data.push(itemNext);
 
-        data.splice(i, 1);
-        let element = {};
-
-        element = {
-          id: data.length + 1 + moment().valueOf(),
-          image:
-            'https://genknews.genkcdn.vn/2019/4/14/avata-1555222480392572000500.jpg',
-        };
-        data.push(element);
-
-        data.unshift(itemNext);
+        //add new item
+        if(this.countAdd <= 5){
+          let element = {};
+          element = {
+            id: data.length + 1 + moment().valueOf(),
+            image: 'https://i.ytimg.com/vi/XLdigyRgREw/hqdefault.jpg',
+          };
+          data.unshift(element);
+          this.countAdd +=1
+        }
       }
     }
-
-    this.setState({dataList: data});
+    this.setState({dataList: [...data]});
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.content}>{this.state.dataList.map(this.renderItem)}</View>
+        <View style={styles.content}>
+          {this.state.dataList.map(this.renderItem)}
+        </View>
       </View>
     );
   }
@@ -102,5 +104,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-
