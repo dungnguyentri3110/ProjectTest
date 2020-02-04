@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window')
 
 export default class Tab2 extends Component {
   constructor(props) {
@@ -9,10 +10,43 @@ export default class Tab2 extends Component {
   }
 
   render() {
+    const {parentScroll} = this.props
     return (
-      <View>
-        <Text> Tab2 </Text>
-      </View>
+      <ScrollView>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+          <View style={styles.content}/>
+
+      </ScrollView>
     );
   }
+}
+
+const styles = {
+    content:{
+        width: width - 40, height: 80, borderRadius: 10, backgroundColor: 'yellow', marginVertical: 10
+    }
 }

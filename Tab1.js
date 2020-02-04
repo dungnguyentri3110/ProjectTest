@@ -10,8 +10,9 @@ export default class Tab1 extends Component {
   }
 
   render() {
+    const {parentScroll} = this.props
     return (
-      <ScrollView scrollEnabled={false}>
+      <ScrollView>
           <View style={styles.content}/>
           <View style={styles.content}/>
           <View style={styles.content}/>
