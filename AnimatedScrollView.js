@@ -28,12 +28,19 @@ export default class AnimatedScrollView extends Component {
         { key: 'tab1', title: 'Tab1' },
         { key: 'tab2', title: 'Tab2' },
       ],
-      scrollEnable: true,
-      maxOffset: 0,
-      heightContent: 0
     };
+
     this.animatedScrollView = new Animated.Value(0)
-    this.height = 0
+    this.offset = 0
+  }
+
+  onIndexChange = (index) => {
+    //Check khi chuyen tab thi cuon het ve dau trang
+    this.setState({ index }, () => {
+      if (this.offset > HEIGHT_IMAGE) {
+        this.AniScrollView.getNode().scrollTo({ x: 0, y: HEIGHT_IMAGE + 1, animated: true })
+      }
+    })
   }
 
   renderScene = ({ route, jumpTo }) => {
@@ -41,7 +48,6 @@ export default class AnimatedScrollView extends Component {
       case 'tab1': {
         return <Tab1 parentScroll={this.state.scrollEnable} />;
       }
-
       case 'tab2': {
         return <Tab2 />;
       }
@@ -57,20 +63,22 @@ export default class AnimatedScrollView extends Component {
       inputRange: [0, HEIGHT_IMAGE, HEIGHT_IMAGE + 1],
       outputRange: [0, 0, 1]
     })
-
-
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <AniScrollView scrollEnabled={this.state.scrollEnable} onContentSizeChange={this.onContentSizeChange} onLayout={this.onLayout}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.animatedScrollView } } }], {
-            useNativeDriver: true
+            useNativeDriver: true,
+            listener: (event) => {
+              this.offset = event.nativeEvent.contentOffset.y
+            }
           })}
           style={{ zIndex: 0 }}
+          ref={refs => this.AniScrollView = refs}
         >
           <View style={{ flex: 1 }}>
             <Image source={{ uri: link }} style={styles.image} />
             <TabView
-              onIndexChange={index => this.setState({ index })}
+              onIndexChange={this.onIndexChange}
               renderScene={this.renderScene}
               navigationState={this.state}
               renderTabBar={props => (
