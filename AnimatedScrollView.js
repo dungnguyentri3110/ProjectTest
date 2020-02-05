@@ -65,7 +65,7 @@ export default class AnimatedScrollView extends Component {
     })
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <AniScrollView scrollEnabled={this.state.scrollEnable} onContentSizeChange={this.onContentSizeChange} onLayout={this.onLayout}
+        <Animated.ScrollView scrollEnabled={this.state.scrollEnable} onContentSizeChange={this.onContentSizeChange} onLayout={this.onLayout}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.animatedScrollView } } }], {
             useNativeDriver: true,
             listener: (event) => {
@@ -101,7 +101,7 @@ export default class AnimatedScrollView extends Component {
             />
             <Text> AnimatedScrollView </Text>
           </View>
-        </AniScrollView>
+        </Animated.ScrollView>
       </SafeAreaView>
     );
   }
